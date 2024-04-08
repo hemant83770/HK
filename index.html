@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Start VWO Async SmartCode -->
+  <!-- Start VWO Async SmartCode -->
 <link rel="preconnect" href="https://dev.visualwebsiteoptimizer.com" />
 <script type='text/javascript' id='vwoCode'>
 window._vwo_code || (function() {
@@ -16,148 +16,167 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
 <!-- End VWO Async SmartCode -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dummy Website for Goal Conversion Testing</title>
+    <title>Shadow DOM Examples</title>
     <style>
-        .container {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 50px;
-        }
-        .box {
-            width: 200px;
-            height: 200px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            text-align: center;
-            line-height: 200px;
-            cursor: pointer;
-        }
-        .nested-box {
-            background-color: #f8f8f8;
-            border: 1px solid #999;
+        .scenario-label {
+            font-weight: bold;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <h2 class="scenario-label">Scenario 1: Parent and its child both are in shadow DOM</h2>
+    <div id="scenario1-container">
+        <div id="scenario1-parent">
+            <slot name="scenario1-content"></slot>
+            <div id="scenario1-child"></div>
+        </div>
+    </div>
 
-<div class="container">
-    <div class="box" id="box1">Box 1</div>
-    <div class="box" id="box2">Box 2</div>
-    <div class="box" id="box3">Box 3</div>
-</div>
+    <h2 class="scenario-label">Scenario 2: Parent and its child both are outside shadow DOM</h2>
+    <div id="scenario2-container">
+        <div id="scenario2-parent">
+            <slot name="scenario2-content"></slot>
+            <div id="scenario2-child"></div>
+        </div>
+    </div>
 
-<div class="container">
-    <div class="box" id="box4">Box 4</div>
-    <div class="box" id="box5">Box 5</div>
-    <div class="box" id="box6">Box 6</div>
-</div>
+    <h2 class="scenario-label">Scenario 3: Parent in outside shadow DOM and child in inside shadow DOM</h2>
+    <div id="scenario3-container">
+        <div id="scenario3-parent">
+            <slot name="scenario3-content"></slot>
+            <div id="scenario3-shadowContainer"></div>
+        </div>
+    </div>
 
-<div class="container">
-    <div class="box nested-box" id="box7">Nested Box 1</div>
-    <div class="box nested-box" id="box8">Nested Box 2</div>
-    <div class="box nested-box" id="box9">Nested Box 3</div>
-</div>
+    <h2 class="scenario-label">Scenario 4: Parent inside shadow DOM and child outside shadow DOM</h2>
+    <div id="scenario4-container">
+        <div id="scenario4-shadowContainer">
+            <div id="scenario4-parent">
+                <slot name="scenario4-content"></slot>
+            </div>
+        </div>
+        <div id="scenario4-child"></div>
+    </div>
 
-<script>
-    const boxes = document.querySelectorAll('.box');
+    <h2 class="scenario-label">Scenario 5: Parent and child both have shadow DOM</h2>
+    <div id="scenario5-container">
+        <div id="scenario5-shadowContainer">
+            <div id="scenario5-parent">
+                <slot name="scenario5-content"></slot>
+            </div>
+        </div>
+        <div id="scenario5-child">
+            <div id="scenario5-shadowContainerChild">
+                <slot name="scenario5-content-child"></slot>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Scenario 1: Parent and its child both are in shadow DOM
+        const shadowRoot1 = document.getElementById('scenario1-container').attachShadow({ mode: 'open' });
+        const template1 = document.createElement('template');
+        template1.innerHTML = `
+            <style>
+                #scenario1-parent {
+                    background-color: lightgray;
+                    padding: 10px;
+                }
 
-    // Scenario 1: Clicking on a link/button inside the shadow DOM.
-    boxes.forEach(box => {
-        box.addEventListener('click', () => {
-            console.log(`Clicked on box with ID: ${box.id}`);
-            // Simulate goal conversion data here
-            // For example, send an event to analytics platform
-        });
-    });
+                #scenario1-child {
+                    background-color: lightblue;
+                    padding: 10px;
+                }
+            </style>
+            <div id="scenario1-parent">
+                <slot name="scenario1-content"></slot>
+                <div id="scenario1-child"></div>
+            </div>
+        `;
+        shadowRoot1.appendChild(template1.content.cloneNode(true));
 
-    // Scenario 2: Clicking on a link/button outside the shadow DOM.
-    const parentBox = document.querySelector('.container');
-    parentBox.addEventListener('click', () => {
-        console.log('Clicked on parent box');
-        // Simulate goal conversion data here
-        // For example, send an event to analytics platform
-    });
+        // Scenario 2: Parent and its child both are outside shadow DOM
+        const parent2 = document.getElementById('scenario2-container').querySelector('#scenario2-parent');
+        const child2 = document.getElementById('scenario2-container').querySelector('#scenario2-child');
 
-    // Scenario 3: Clicking on an element inside the shadow DOM based on CSS selectors.
-    const nestedBoxes = document.querySelectorAll('.nested-box');
-    nestedBoxes.forEach(nestedBox => {
-        nestedBox.addEventListener('click', () => {
-            console.log(`Clicked on nested box with ID: ${nestedBox.id}`);
-            // Simulate goal conversion data here
-            // For example, send an event to analytics platform
-        });
-    });
+        parent2.style.backgroundColor = 'lightgray';
+        parent2.style.padding = '10px';
 
-    // Scenario 4: Clicking on an element outside the shadow DOM based on CSS selectors.
-    const parentBox2 = document.querySelector('.container');
-    parentBox2.addEventListener('click', (event) => {
-        if (event.target.classList.contains('box')) {
-            console.log(`Clicked on parent box with ID: ${event.target.id}`);
-            // Simulate goal conversion data here
-            // For example, send an event to analytics platform
-        }
-    });
+        child2.style.backgroundColor = 'lightblue';
+        child2.style.padding = '10px';
 
-    // Scenario 5: Clicking on a parent element that contains an element inside the shadow DOM.
-    const parentBox3 = document.querySelector('.container');
-    parentBox3.addEventListener('click', (event) => {
-        if (event.target.classList.contains('nested-box')) {
-            console.log(`Clicked on parent box with ID: ${event.target.parentElement.id}`);
-            // Simulate goal conversion data here
-            // For example, send an event to analytics platform
-        }
-    });
+        // Scenario 3: Parent in outside shadow DOM and child in inside shadow DOM
+        const parent3 = document.getElementById('scenario3-container').querySelector('#scenario3-parent');
+        const shadowRoot3 = parent3.attachShadow({ mode: 'open' });
+        const template3 = document.createElement('template');
+        template3.innerHTML = `
+            <style>
+                #scenario3-parent {
+                    background-color: lightgray;
+                    padding: 10px;
+                }
 
-    // Scenario 6: Clicking on a child element inside the shadow DOM and verifying if the parent element's click event is triggered.
-    const nestedBoxes2 = document.querySelectorAll('.nested-box');
-    nestedBoxes2.forEach(nestedBox => {
-        nestedBox.addEventListener('click', (event) => {
-            event.stopPropagation(); // Stop propagation to prevent parent's event from being triggered
-            console.log(`Clicked on nested box with ID: ${nestedBox.id}`);
-            // Simulate goal conversion data here
-            // For example, send an event to analytics platform
-        });
-    });
+                #scenario3-shadowContainer {
+                    background-color: lightblue;
+                    padding: 10px;
+                }
+            </style>
+            <div id="scenario3-parent">
+                <slot name="scenario3-content"></slot>
+                <div id="scenario3-shadowContainer"></div>
+            </div>
+        `;
+        shadowRoot3.appendChild(template3.content.cloneNode(true));
 
-    // Scenario 7: Clicking on a parent element outside the shadow DOM and verifying if the child element's click event inside the shadow DOM is triggered.
-    const parentBox4 = document.querySelector('.container');
-    parentBox4.addEventListener('click', () => {
-        const childBox = document.querySelector('.nested-box');
-        childBox.click(); // Trigger click on the child element
-    });
+        // Scenario 4: Parent inside shadow DOM and child outside shadow DOM
+        const shadowRoot4 = document.getElementById('scenario4-container').attachShadow({ mode: 'open' });
+        const template4 = document.createElement('template');
+        template4.innerHTML = `
+            <style>
+                #scenario4-parent {
+                    background-color: lightgray;
+                    padding: 10px;
+                }
+            </style>
+            <div id="scenario4-shadowContainer">
+                <div id="scenario4-parent">
+                    <slot name="scenario4-content"></slot>
+                </div>
+            </div>
+        `;
+        shadowRoot4.appendChild(template4.content.cloneNode(true));
 
-    // Scenario 8: Clicking on an element that is the parent of another element with shadow DOM (where the shadowRoot property exists).
-    const parentOfShadow = document.querySelector('.container');
-    const shadowHost = document.createElement('div');
-    const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
-    shadowRoot.innerHTML = `
-        <style>
-            .shadow-button {
-                background-color: #4CAF50;
-                border: none;
-                color: white;
-                padding: 10px 20px;
-                cursor: pointer;
-            }
-        </style>
-        <button class="shadow-button">Click me (inside shadow DOM)</button>
-    `;
-    parentOfShadow.appendChild(shadowHost);
-    const buttonInsideShadow = shadowRoot.querySelector('.shadow-button');
-    buttonInsideShadow.addEventListener('click', () => {
-        console.log('Button inside shadow DOM clicked from parent element');
-        // Simulate goal conversion data here
-        // For example, send an event to analytics platform
-    });
+        const child4 = document.getElementById('scenario4-container').querySelector('#scenario4-child');
+        child4.style.backgroundColor = 'lightblue';
+        child4.style.padding = '10px';
 
-    // Scenario 9: Clicking on an element that is a descendant of an element with shadow DOM.
-    const descendantOfShadow = document.querySelector('.nested-box');
-    descendantOfShadow.addEventListener('click', () => {
-        console.log('Nested box clicked from descendant element');
-        // Simulate goal conversion data here
-        // For example, send an event to analytics platform
-    });
-</script>
+        // Scenario 5: Parent and child both have shadow DOM
+        const shadowRoot5 = document.getElementById('scenario5-container').attachShadow({ mode: 'open' });
+        const template5 = document.createElement('template');
+        template5.innerHTML = `
+            <style>
+                #scenario5-parent {
+                    background-color: lightgray;
+                    padding: 10px;
+                }
 
+                #scenario5-shadowContainerChild {
+                    background-color: lightblue;
+                    padding: 10px;
+                }
+            </style>
+            <div id="scenario5-shadowContainer">
+                <div id="scenario5-parent">
+                    <slot name="scenario5-content"></slot>
+                </div>
+            </div>
+            <div id="scenario5-child">
+                <div id="scenario5-shadowContainerChild">
+                    <slot name="scenario5-content-child"></slot>
+                </div>
+            </div>
+        `;
+        shadowRoot5.appendChild(template5.content.cloneNode(true));
+    </script>
 </body>
 </html>
