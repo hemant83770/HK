@@ -22,52 +22,125 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             font-weight: bold;
             margin-top: 20px;
         }
+
+        /* CSS styles for Scenario 1 */
+        .scenario1-parent {
+            background-color: lightgray;
+            padding: 10px;
+        }
+
+        .scenario1-child {
+            background-color: lightblue;
+            padding: 10px;
+        }
+
+        /* CSS styles for Scenario 2 */
+        .scenario2-parent {
+            background-color: lightgray;
+            padding: 10px;
+        }
+
+        .scenario2-child {
+            background-color: lightblue;
+            padding: 10px;
+        }
+
+        /* CSS styles for Scenario 3 */
+        .scenario3-parent {
+            background-color: lightgray;
+            padding: 10px;
+        }
+
+        .scenario3-shadowContainer {
+            background-color: lightblue;
+            padding: 10px;
+        }
+
+        /* CSS styles for Scenario 4 */
+        .scenario4-parent {
+            background-color: lightgray;
+            padding: 10px;
+        }
+
+        .scenario4-child {
+            background-color: lightblue;
+            padding: 10px;
+        }
+
+        /* CSS styles for Scenario 5 */
+        .scenario5-parent {
+            background-color: lightgray;
+            padding: 10px;
+        }
+
+        .scenario5-shadowContainerChild {
+            background-color: lightblue;
+            padding: 10px;
+        }
+
+        /* CSS styles for Scenario 6 */
+        .scenario6-parent {
+            background-color: lightgray;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .scenario6-child-container {
+            margin-top: 10px;
+        }
+
+        .scenario6-child {
+            background-color: lightblue;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
     <h2 class="scenario-label">Scenario 1: Parent and its child both are in shadow DOM</h2>
     <div id="scenario1-container">
-        <div id="scenario1-parent">
+        <div class="scenario1-parent">
             <slot name="scenario1-content"></slot>
-            <div id="scenario1-child"></div>
+            <div class="scenario1-child"></div>
         </div>
     </div>
 
     <h2 class="scenario-label">Scenario 2: Parent and its child both are outside shadow DOM</h2>
     <div id="scenario2-container">
-        <div id="scenario2-parent">
+        <div class="scenario2-parent">
             <slot name="scenario2-content"></slot>
-            <div id="scenario2-child"></div>
+            <div class="scenario2-child"></div>
         </div>
     </div>
 
     <h2 class="scenario-label">Scenario 3: Parent in outside shadow DOM and child in inside shadow DOM</h2>
     <div id="scenario3-container">
-        <div id="scenario3-parent">
+        <div class="scenario3-parent">
             <slot name="scenario3-content"></slot>
-            <div id="scenario3-shadowContainer"></div>
+            <div class="scenario3-shadowContainer"></div>
         </div>
     </div>
 
     <h2 class="scenario-label">Scenario 4: Parent inside shadow DOM and child outside shadow DOM</h2>
     <div id="scenario4-container">
-        <div id="scenario4-shadowContainer">
-            <div id="scenario4-parent">
+        <div class="scenario4-shadowContainer">
+            <div class="scenario4-parent">
                 <slot name="scenario4-content"></slot>
             </div>
         </div>
-        <div id="scenario4-child"></div>
+        <div class="scenario4-child"></div>
     </div>
 
     <h2 class="scenario-label">Scenario 5: Parent and child both have shadow DOM</h2>
     <div id="scenario5-container">
-        <div id="scenario5-shadowContainer">
-            <div id="scenario5-parent">
+        <div class="scenario5-shadowContainer">
+            <div class="scenario5-parent">
                 <slot name="scenario5-content"></slot>
             </div>
         </div>
-        <div id="scenario5-child">
-            <div id="scenario5-shadowContainerChild">
+        <div class="scenario5-child">
+            <div class="scenario5-shadowContainerChild">
                 <slot name="scenario5-content-child"></slot>
             </div>
         </div>
@@ -75,154 +148,19 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
 
     <h2 class="scenario-label">Scenario 6: Nested Shadow DOM</h2>
     <div id="scenario6-container">
-        <!-- Your nested shadow DOM structure goes here -->
+        <div class="scenario6-parent">
+            <!-- Add content for the parent in nested shadow DOM -->
+            <slot name="scenario6-parent-content"></slot>
+
+            <!-- Start of nested shadow DOM for child -->
+            <div class="scenario6-child-container">
+                <div class="scenario6-child">
+                    <!-- Add content for the child in nested shadow DOM -->
+                    <slot name="scenario6-child-content"></slot>
+                </div>
+            </div>
+            <!-- End of nested shadow DOM for child -->
+        </div>
     </div>
-
-    <script>
-        // Scenario 1: Parent and its child both are in shadow DOM
-        const shadowRoot1 = document.getElementById('scenario1-container').attachShadow({ mode: 'open' });
-        const template1 = document.createElement('template');
-        template1.innerHTML = `
-            <style>
-                #scenario1-parent {
-                    background-color: lightgray;
-                    padding: 10px;
-                }
-
-                #scenario1-child {
-                    background-color: lightblue;
-                    padding: 10px;
-                }
-            </style>
-            <div id="scenario1-parent">
-                <slot name="scenario1-content"></slot>
-                <div id="scenario1-child"></div>
-            </div>
-        `;
-        shadowRoot1.appendChild(template1.content.cloneNode(true));
-
-        // Scenario 2: Parent and its child both are outside shadow DOM
-        const parent2 = document.getElementById('scenario2-container').querySelector('#scenario2-parent');
-        const child2 = document.getElementById('scenario2-container').querySelector('#scenario2-child');
-
-        parent2.style.backgroundColor = 'lightgray';
-        parent2.style.padding = '10px';
-
-        child2.style.backgroundColor = 'lightblue';
-        child2.style.padding = '10px';
-
-        // Scenario 3: Parent in outside shadow DOM and child in inside shadow DOM
-        const parent3 = document.getElementById('scenario3-container').querySelector('#scenario3-parent');
-        const shadowRoot3 = parent3.attachShadow({ mode: 'open' });
-        const template3 = document.createElement('template');
-        template3.innerHTML = `
-            <style>
-                #scenario3-parent {
-                    background-color: lightgray;
-                    padding: 10px;
-                }
-
-                #scenario3-shadowContainer {
-                    background-color: lightblue;
-                    padding: 10px;
-                }
-            </style>
-            <div id="scenario3-parent">
-                <slot name="scenario3-content"></slot>
-                <div id="scenario3-shadowContainer"></div>
-            </div>
-        `;
-        shadowRoot3.appendChild(template3.content.cloneNode(true));
-
-        // Scenario 4: Parent inside shadow DOM and child outside shadow DOM
-        const shadowRoot4 = document.getElementById('scenario4-container').attachShadow({ mode: 'open' });
-        const template4 = document.createElement('template');
-        template4.innerHTML = `
-            <style>
-                #scenario4-parent {
-                    background-color: lightgray;
-                    padding: 10px;
-                }
-            </style>
-            <div id="scenario4-shadowContainer">
-                <div id="scenario4-parent">
-                    <slot name="scenario4-content"></slot>
-                </div>
-            </div>
-        `;
-        shadowRoot4.appendChild(template4.content.cloneNode(true));
-
-        const child4 = document.getElementById('scenario4-container').querySelector('#scenario4-child');
-        child4.style.backgroundColor = 'lightblue';
-        child4.style.padding = '10px';
-
-        // Scenario 5: Parent and child both have shadow DOM
-        const shadowRoot5 = document.getElementById('scenario5-container').attachShadow({ mode: 'open' });
-        const template5 = document.createElement('template');
-        template5.innerHTML = `
-            <style>
-                #scenario5-parent {
-                    background-color: lightgray;
-                    padding: 10px;
-                }
-
-                #scenario5-shadowContainerChild {
-                    background-color: lightblue;
-                    padding: 10px;
-                }
-            </style>
-            <div id="scenario5-shadowContainer">
-                <div id="scenario5-parent">
-                    <slot name="scenario5-content"></slot>
-                </div>
-            </div>
-            <div id="scenario5-child">
-                <div id="scenario5-shadowContainerChild">
-                    <slot name="scenario5-content-child"></slot>
-                </div>
-            </div>
-        `;
-        shadowRoot5.appendChild(template5.content.cloneNode(true));
-
-        // Scenario 6: Nested Shadow DOM
-        const shadowRoot6 = document.getElementById('scenario6-container').attachShadow({ mode: 'open' });
-        const template6 = document.createElement('template');
-        template6.innerHTML = `
-            
-               <style>
-        /* CSS styles for Scenario 6 */
-        #scenario6-parent {
-            background-color: lightgray;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
-        }
-
-        #scenario6-child-container {
-            margin-top: 10px;
-        }
-
-        #scenario6-child {
-            background-color: lightblue;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-            </style>
-            <div id="scenario6-parent">
-                <!-- Add content for the parent in nested shadow DOM -->
-                <slot name="scenario6-parent-content"></slot>
-
-                <!-- Start of nested shadow DOM for child -->
-                <div id="scenario6-child-container">
-                    <div id="scenario6-child">
-                        <!-- Add content for the child in nested shadow DOM -->
-                        <slot name="scenario6-child-content"></slot>
-                    </div>
-                </div>
-                <!-- End of nested shadow DOM for child -->
-            </div>
-        `;
-        shadowRoot6.appendChild(template6.content.cloneNode(true));
-    </script>
 </body>
 </html>
