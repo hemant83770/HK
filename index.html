@@ -83,7 +83,6 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             padding: 10px;
         }
 
-        /* CSS styles for Scenario 6 */
         .scenario6-parent {
             background-color: lightgray;
             padding: 10px;
@@ -98,7 +97,6 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             background-color: lightblue;
             padding: 10px;
             border: 1px solid #ccc;
-        }
     </style>
 </head>
 <body>
@@ -155,11 +153,11 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             <!-- Start of nested shadow DOM for child -->
             <div class="scenario6-child-container" id="scenario6-child">
                 <!-- Add content for the child in nested shadow DOM -->
-                <slot name="scenario6-child-content"></slot>
             </div>
             <!-- End of nested shadow DOM for child -->
         </div>
     </div>
+
 
     <script>
         // Shadow DOM for Scenario 1
@@ -224,31 +222,41 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             <slot name="scenario5-content-child"></slot>
         `;
 
-        // Shadow DOM for Scenario 6
+        // Create the outer shadow DOM
         const scenario6Parent = document.getElementById('scenario6-parent');
-        const scenario6Child = document.getElementById('scenario6-child');
-        const scenario6ParentShadowRoot = scenario6Parent.attachShadow({ mode: 'open' });
-        const scenario6ChildShadowRoot = scenario6Child.attachShadow({ mode: 'open' });
-        scenario6ParentShadowRoot.innerHTML = `
+        const scenario6ParentRoot = scenario6Parent.attachShadow({ mode: 'open' });
+
+        // Create the inner shadow DOM within the outer shadow DOM
+        const scenario6ChildContainer = document.createElement('div');
+        const scenario6ChildRoot = scenario6ChildContainer.attachShadow({ mode: 'open' });
+
+        // Add content to the inner shadow DOM
+        scenario6ChildRoot.innerHTML = `
             <style>
-                .scenario6-parent {
-                    background-color: lightgray;
-                    padding: 10px;
-                    border: 1px solid #ccc;
-                }
-            </style>
-            <slot name="scenario6-parent-content"></slot>
-        `;
-        scenario6ChildShadowRoot.innerHTML = `
-            <style>
+                /* CSS styles for the inner shadow DOM */
                 .scenario6-child {
                     background-color: lightblue;
                     padding: 10px;
                     border: 1px solid #ccc;
                 }
+                .scenario6-child-content {
+                    color: blue;
+                }
             </style>
-            <slot name="scenario6-child-content"></slot>
+            <div class="scenario6-child">
+                <!-- Content within the inner shadow DOM -->
+                <p class="scenario6-child-content">This is content within the inner shadow DOM.</p>
+                <button>Click me</button>
+            </div>
         `;
+
+        // Append the inner shadow DOM to the outer shadow DOM
+        scenario6ParentRoot.appendChild(scenario6ChildContainer);
+
+        // Add event listener for the button inside the inner shadow DOM
+        scenario6ChildRoot.querySelector('button').addEventListener('click', () => {
+            alert('Button inside inner shadow DOM clicked!');
+        });
     </script>
 </body>
 </html>
