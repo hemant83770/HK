@@ -72,6 +72,12 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             </div>
         </div>
     </div>
+
+    <h2 class="scenario-label">Scenario 6: Nested Shadow DOM</h2>
+    <div id="scenario6-container">
+        <!-- Your nested shadow DOM structure goes here -->
+    </div>
+
     <script>
         // Scenario 1: Parent and its child both are in shadow DOM
         const shadowRoot1 = document.getElementById('scenario1-container').attachShadow({ mode: 'open' });
@@ -177,6 +183,46 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             </div>
         `;
         shadowRoot5.appendChild(template5.content.cloneNode(true));
+
+        // Scenario 6: Nested Shadow DOM
+        const shadowRoot6 = document.getElementById('scenario6-container').attachShadow({ mode: 'open' });
+        const template6 = document.createElement('template');
+        template6.innerHTML = `
+            
+               <style>
+        /* CSS styles for Scenario 6 */
+        #scenario6-parent {
+            background-color: lightgray;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        #scenario6-child-container {
+            margin-top: 10px;
+        }
+
+        #scenario6-child {
+            background-color: lightblue;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+            </style>
+            <div id="scenario6-parent">
+                <!-- Add content for the parent in nested shadow DOM -->
+                <slot name="scenario6-parent-content"></slot>
+
+                <!-- Start of nested shadow DOM for child -->
+                <div id="scenario6-child-container">
+                    <div id="scenario6-child">
+                        <!-- Add content for the child in nested shadow DOM -->
+                        <slot name="scenario6-child-content"></slot>
+                    </div>
+                </div>
+                <!-- End of nested shadow DOM for child -->
+            </div>
+        `;
+        shadowRoot6.appendChild(template6.content.cloneNode(true));
     </script>
 </body>
 </html>
